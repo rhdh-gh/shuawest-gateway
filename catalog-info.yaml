@@ -1,0 +1,68 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: shuawest-poi-gateway-app-dev
+  annotations:
+    argocd/app-name: shuawest-poi-gateway-app-dev
+    backstage.io/kubernetes-id: shuawest-poi-gateway-app
+    backstage.io/kubernetes-namespace: shuawest
+    backstage.io/techdocs-ref: dir:.
+    github.com/project-slug: rhdh-gh/shuawest-gateway
+    janus-idp.io/tekton-enabled: 'true'
+  tags:
+    - java
+    - quarkus
+    - maven
+    - workshop
+  links:
+    - url: https://console-openshift-console.apps.rosa-x4jc7.l07n.p1.openshiftapps.com/dev-pipelines/ns/shuawest/
+      title: Pipelines
+      icon: web
+    - url: https://console-openshift-console.apps.rosa-x4jc7.l07n.p1.openshiftapps.com/k8s/ns/shuawest/deployments/shuawest-poi-gateway-app
+      title: Deployment
+      icon: web
+    - url: https://devspaces.apps.rosa-x4jc7.l07n.p1.openshiftapps.com/#https://github.com/rhdh-gh/shuawest-gateway?che-editor=che-incubator/che-code/latest&devfilePath=.devfile-vscode.yaml
+      title: OpenShift Dev Spaces (VS Code)
+      icon: web
+spec:
+  type: service
+  lifecycle: production
+  owner: "user:default/shuawest"
+  system: workshop-system-shuawest
+  providesApis:
+    - gateway-api-shuawest
+  consumesApis:
+    - backend-api-shuawest
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: workshop-system-shuawest
+  tags:
+    - backstage
+    - janus-idp
+    - openshift
+    - workshop
+    - rh-summit
+spec:
+  owner: "user:default/shuawest"
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: gateway-api-shuawest
+  description: API surface exposed to interact with Backends (summit POIs + parks data) via the Gateway
+  links:
+    - url: http://shuawest-poi-gateway-app-shuawest.apps.rosa-x4jc7.l07n.p1.openshiftapps.com/q/swagger-ui
+      title: Swagger UI
+      icon: web
+    - url: https://github.com/rhdh-gh/shuawest-gateway/tree/main/src/main/resources/META-INF/openapi.yaml
+      title: API Spec
+      icon: code
+spec:
+  type: openapi
+  lifecycle: production
+  owner: "user:default/shuawest"
+  system: workshop-system-shuawest
+  definition:
+    $text: https://github.com/rhdh-gh/shuawest-gateway/tree/main/src/main/resources/META-INF/openapi.yaml
